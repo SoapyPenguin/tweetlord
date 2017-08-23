@@ -1,0 +1,192 @@
+html {
+  height: 100%;
+  width: 100%;
+  background-color: #595959;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  min-height: 100%;
+  background-color: #595959;
+}
+
+header {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 51px;
+}
+
+.btn {
+  font-family: "Source Sans Pro";
+}
+
+.top-banner {
+  padding: 0;
+  margin: 0;
+  height: 100px;
+  width: 100%;
+}
+
+.banner-jt {
+  height: 100px;
+  width: 100%;
+  background-color: #4d4d4d;
+}
+
+.banner-title {
+  margin: 0;
+  padding-top: 2%;
+  font-family: "Fascinate Inline", sans-serif;
+  font-size: 300%;
+  color: white;
+}
+
+.btitle1 {
+  color: #00b8e6;
+}
+
+.nav * {
+  font-family: "Source Sans Pro";
+}
+
+#about-modal {
+  margin-top: 20%;
+}
+
+#game-container {
+  padding: 0;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color: #595959;
+}
+
+.game-content {
+  height: 100%;
+  width: 100%;
+  background-color: #595959;
+}
+
+.lobby-content {
+  height: 100%;
+  width: 100%;
+  background-color: #595959;
+}
+
+.menu-view {
+  margin: auto;
+  height: 100%;
+  width: 40%;
+  vertical-align: middle;
+}
+
+.lobby-menu {
+  padding-top: 20%;
+  padding-left: 0;
+  margin: auto;
+  list-style-type: none;
+  vertical-align: middle;
+}
+
+.lobby-menu li {
+  font-size: 250%;
+  font-family: "Source Sans Pro";
+  color: #33d6ff;
+  padding-bottom: 10%;
+  vertical-align: middle;
+}
+
+.newprompt-view {
+  display: none;
+  height: 100%;
+  width: 100%;
+  vertical-align: middle;
+  margin: 0;
+}
+
+.nameprompt-header {
+  margin-top: 10%;
+  margin-bottom: 8%;
+  font-family: "Source Sans Pro";
+  font-size: 200%;
+  color: white;
+}
+
+#name-prompt, #gamecode-prompt {
+  width: 80%;
+  margin: auto;
+}
+
+.make-submit, .join-submit {
+  width: 100px;
+  margin: auto;
+  margin-top: 10%;
+}
+
+.joinprompt-view {
+  display: none;
+  width: 100%;
+  height: 100%;
+  vertical-align: middle;
+  margin: 0;
+}
+
+.options-view {
+  display: none;
+}
+
+.back-btn {
+  margin-top: 2%;
+  margin-left: 2%;
+}
+
+.ph0-content {
+  background: linear-gradient(to right, #666666, #808080, #666666);
+  height: 50%;
+}
+
+.ph0-header {
+  margin-top: 0;
+  padding-top: 5%;
+  margin-left: 10%;
+  color: white;
+}
+
+.ph0-gc {
+  float: right;
+  margin-right: 6%;
+  margin-top: 3%;
+  padding-left: 5px;
+  font-size: 120%;
+  background: linear-gradient(#007399, #0086b3, #007399);
+  color: white;
+  border: 2px solid #004d66;
+  border-radius: 5px;
+}
+
+.ph0-codespan {
+  position: relative;
+  bottom: 4px;
+  padding-left: 2%;
+  font-size: 160%;
+  margin-top: -10px;
+}
+
+.ph0-playerlist {
+  width: 50%;
+  list-style-type: decimal;
+  margin-top: 3%;
+  margin-left: 4%;
+  padding-left: 5%;
+  border: 3px solid #007399;
+  border-radius: 16px;
+  background: linear-gradient(#4dd2ff, #80dfff, #4dd2ff)
+}
+
+.ph-listitem {
+  padding-left: 1%;
+  font-size: 160%;
+}
