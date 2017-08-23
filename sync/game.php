@@ -120,19 +120,19 @@ mysqli_close($conn);
 			</div>
 		</div>
   		<div class="game-content">
-				<div class="ph0-content">
-					<h3 class="ph0-header">Waiting for players to join...</h3>
-					<div class="ph0-gc">GAME CODE: <br><span class="ph0-codespan"><?php echo $_REQUEST['gc']; ?></span></div>
-					<div class="ph0-timer"></div>
-					<ul class="ph0-playerlist">
-						<li class="ph0-p1"><span class="ph-listitem"><?php echo $gamenames[0]; ?></span></li>
-						<li class="ph0-p2"><span class="ph-listitem"><?php echo $gamenames[1]; ?></span></li>
-						<li class="ph0-p3"><span class="ph-listitem"><?php echo $gamenames[2]; ?></span></li>
-						<li class="ph0-p4"><span class="ph-listitem"><?php echo $gamenames[3]; ?></span></li>
-						<li class="ph0-p5"><span class="ph-listitem"><?php echo $gamenames[4]; ?></span></li>
-						<li class="ph0-p6"><span class="ph-listitem"><?php echo $gamenames[5]; ?></span></li>
-					</ul>
-				</div>
+			<div class="ph0-content">
+				<h3 class="ph0-header">Waiting for players to join...</h3>
+				<div class="ph0-gc">GAME CODE: <br><span class="ph0-codespan"><?php echo $_REQUEST['gc']; ?></span></div>
+				<div class="ph0-timer"><span class="ph0-tick"></span></div>
+				<ul class="ph0-playerlist">
+					<li class="ph0-p1"><span class="ph0-listitem"><?php echo $gamenames[0]; ?></span></li>
+					<li class="ph0-p2"><span class="ph0-listitem"><?php echo $gamenames[1]; ?></span></li>
+					<li class="ph0-p3"><span class="ph0-listitem"><?php echo $gamenames[2]; ?></span></li>
+					<li class="ph0-p4"><span class="ph0-listitem"><?php echo $gamenames[3]; ?></span></li>
+					<li class="ph0-p5"><span class="ph0-listitem"><?php echo $gamenames[4]; ?></span></li>
+					<li class="ph0-p6"><span class="ph0-listitem"><?php echo $gamenames[5]; ?></span></li>
+				</ul>
+			</div>
       </div>
 			<div class="ph1-content">
 			</div>
@@ -161,6 +161,7 @@ $(document).ready(function() {
 	<?php } ?>
 		console.log(JSON.stringify(gamePlayers));
 	var gamePoints = JSON.parse('<?php echo $gamepts; ?>');
+	var gameHost = <?php echo $_SESSION['gameHost']; ?>;
 	var userID = <?php echo $_SESSION['userID']; ?>;
 	var phase = 999;
 	var round = 999;
@@ -218,19 +219,50 @@ $(document).ready(function() {
 				gstate = JSON.parse(response);
 				phase = gstate.phase;
 				round = gstate.round;
+				gameHost = gstate.host;
 				gamePlayers = gstate.players;
 				gamePoints = gstate.points;
 			},
 			error: function() {
-				alert("Sorry, but an error occurred when updating game. Try refreshing the page.");
+				alert("Sorry, but an error occurred when updating the game. Try refreshing the page.");
 			}
 		});
 	}, 3000);
 
 	//Game logic
 	if(phase == 0) {
+		//Name colors - synchronize server-side??
 		setInterval(function() {
-
+			if(gameHost == userID) {
+				$.ajax({
+					url: "/sync/scripts/decrementPh0Timer.php",
+					type: "POST",
+					data: {
+						gameID: gameID
+					},
+					success: function(response) {
+						//To-do: animate ticking
+						$('.ph0-tick').val(response);
+					},
+					error: function() {
+						alert("Sorry, but an error occurred when decrementing the game timer. Try refreshing the page.");
+					}
+				});
+			} else {
+				$.ajax({
+					url: "/sync/scripts/updatePh0Timer.php",
+					type: "POST",
+					data: {
+						gameID: gameID
+					},
+					success: function(response) {
+						$('ph0-tick').val(response);
+					},
+					error: function() {
+						alert("Sorry, but an error occurred when updating the game timer. Try refreshing the page.");
+					}
+				});
+			}
 		}, 1000);
 	}
 
@@ -246,7 +278,7 @@ $(document).ready(function() {
 
 			},
 			error: function() {
-				alert("Sorry, but an error occurred when updating game. Try refreshing the page.");
+				alert("Sorry, but an error occurred when updating the game. Try refreshing the page.");
 			}
 		});
 	}
