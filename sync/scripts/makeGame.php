@@ -85,6 +85,13 @@ if($_POST['makeGameGate'] == "verified") {
   if(!$madegt = mysqli_query($conn, $makegt)) {
     die("Critical error: failed to make gametweets.");
   }
+
+  //Make gametimers
+  $maketimers = "INSERT INTO gametimers (game_id, ph0timer, ph1timer, ph2timer, ph3timer, ph4timer, ph5timer) VALUES (" . $gid .
+  ", 60, 60, 30, 15, 10, 60)";
+  if(!$madetimers = mysqli_query($conn, $maketimers)) {
+    die("Critical error: failed to make gametimers.");
+  }
   mysqli_close($conn);
 
   //Set session variables

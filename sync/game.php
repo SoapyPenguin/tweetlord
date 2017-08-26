@@ -159,12 +159,16 @@ $(document).ready(function() {
 	<?php } if($gameplayers['p6'] != "none") { ?>
 		gamePlayers["p6"] = <?php echo $gameplayers['p6']; ?>;
 	<?php } ?>
-		console.log(JSON.stringify(gamePlayers));
+	var gameNames = {};
+	<?php for($i = 0; $i < 6; $i++) { ?>
+		gameNames["p<?php echo $i+1; ?>"] = "<?php echo $gamenames[$i]; ?>";
+	<?php } ?>
 	var gamePoints = JSON.parse('<?php echo $gamepts; ?>');
 	var gameHost = <?php echo $_SESSION['gameHost']; ?>;
 	var userID = <?php echo $_SESSION['userID']; ?>;
 	var phase = 999;
 	var round = 999;
+	var tick = 60;
 
 	//Player leave
 	window.onbeforeunload = function() {
@@ -229,57 +233,80 @@ $(document).ready(function() {
 		});
 	}, 3000);
 
-	//Game logic
-	if(phase == 0) {
-		//Name colors - synchronize server-side??
-		setInterval(function() {
-			if(gameHost == userID) {
-				$.ajax({
-					url: "/sync/scripts/decrementPh0Timer.php",
-					type: "POST",
-					data: {
-						gameID: gameID
-					},
-					success: function(response) {
-						//To-do: animate ticking
-						$('.ph0-tick').val(response);
-					},
-					error: function() {
-						alert("Sorry, but an error occurred when decrementing the game timer. Try refreshing the page.");
-					}
-				});
-			} else {
-				$.ajax({
-					url: "/sync/scripts/updatePh0Timer.php",
-					type: "POST",
-					data: {
-						gameID: gameID
-					},
-					success: function(response) {
-						$('ph0-tick').val(response);
-					},
-					error: function() {
-						alert("Sorry, but an error occurred when updating the game timer. Try refreshing the page.");
-					}
-				});
+	var ph0setup = true;
+	// if(gameHost == userID) {
+	//
+	// }
+
+	//Tick
+	setInterval(function() {
+		if(phase == 0) {
+			if(ph0setup == true) {
+				rollPh0Colors();
+				ph0setup = false;
 			}
-		}, 1000);
-	}
+			$('.ph0-tick').html(tick)
+			nameRefreshInd = 1;
+			$('.ph0-listitem').each(function() {
+				var ph0liInd = "p" + nameRefreshInd;
+				nameRefreshInd++;
+				$(this).html(gameNames[ph0liInd]);
+			});
+		}
+		tick--;
+	}, 1000);
 
-	function updatePhase0() {
-		$.ajax({
-			url: "/sync/scripts/phase0.php",
-			type: "POST",
-			data: {
-				gameID: gameID
-			},
-			success: function(response) {
+	// //Game tick
+	// setInterval(function() {
+	// 	if(phase == 0) {
+	// 		rollPh0Colors();
+	// 		if(gameHost == userID) {
+	// 			alert("woot");
+	// 			$.ajax({
+	// 				url: "/sync/scripts/timers/decrementPh0Timer.php",
+	// 				type: "POST",
+	// 				data: {
+	// 					gameID: gameID,
+	// 					tick: tick
+	// 				},
+	// 				success: function(response) {
+	// 					//To-do: animate ticking
+	// 					console.log("EXECUTED decrementPh0Timer");
+	// 					tick--;
+	// 					$('.ph0-tick').html(tick);
+	// 				},
+	// 				error: function() {
+	// 					alert("Sorry, but an error occurred when decrementing the game timer. Try refreshing the page.");
+	// 				}
+	// 			});
+	// 		} else {
+	// 			$.ajax({
+	// 				url: "/sync/scripts/timers/updatePh0Timer.php",
+	// 				type: "POST",
+	// 				data: {
+	// 					gameID: gameID
+	// 				},
+	// 				success: function(response) {
+	// 					console.log("EXECUTED updatePh0Timer");
+	// 					$('ph0-tick').html(response);
+	// 				},
+	// 				error: function() {
+	// 					alert("Sorry, but an error occurred when updating the game timer. Try refreshing the page.");
+	// 				}
+	// 			});
+	// 		}
+	// 		for(var i = 1; i < 7; i++) {
+	// 			$('.ph0-p' + i).val(gamePlayers["p" + i]);
+	// 		}
+	// 	}
+	// }, 1000);
 
-
-			},
-			error: function() {
-				alert("Sorry, but an error occurred when updating the game. Try refreshing the page.");
-			}
+	//Name colors
+	function rollPh0Colors() {
+		var c = ['#cc0000','#cc9900','#cccc00','#99cc00','#00cc33','#0099cc','#0033cc','#3300cc','#6600cc','#9900cc'];
+		var olor = Math.floor(Math.random() * 10);
+		$('.ph0-listitem').each(function() {
+			$(this).css("color", c[olor]);
 		});
 	}
 

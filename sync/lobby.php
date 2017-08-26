@@ -84,10 +84,9 @@
         <div class="newprompt-view">
 					<button class="btn btn-default back-btn">Back</button>
           <h4 class="nameprompt-header" align="center">Choose a name</h4>
-          <form action="/sync/scripts/makeGame.php" method="post" name="name-prompt" id="name-prompt" onsubmit="return validateMake()" class="form-horizontal">
-						<input type="hidden" name="randomTweeter" value="">
+          <form action="/sync/scripts/makeGame.php" method="post" name="name-prompt" id="name-prompt" class="form-horizontal">
 						<input type="hidden" name="makeGameGate" value="verified">
-            <input type="text" name="namepromptM" class="form-control" id="nameprompt-input" placeholder="16 characters max" autofocus required>
+            <input type="text" name="namepromptM" class="form-control" id="nameprompt-input" maxlength="16" placeholder="16 characters max" autofocus required>
 						<div class="make-submit">
 							<button type="submit" name="make-game-submit" class="btn btn-primary">Start Game!</button>
 						</div>
@@ -96,12 +95,11 @@
 				<div class="joinprompt-view">
 					<button class="btn btn-default back-btn">Back</button>
 					<form action="/sync/scripts/joinGame.php" method="post" name="gamecode-prompt" id="gamecode-prompt" class="form-horizontal">
-						<input type="hidden" name="randomTweeter" value="">
 						<input type="hidden" name="joinGameGate" value="verified">
 						<h4 class="nameprompt-header" align="center">Choose a name</h4>
-						<input type="text" name="namepromptJ" class="form-control" id="nameprompt-input" placeholder="16 characters max" autofocus required>
+						<input type="text" name="namepromptJ" class="form-control" id="nameprompt-input" maxlength="16" placeholder="16 characters max" autofocus required>
 						<h4 class="nameprompt-header" align="center">Enter game code</h4>
-						<input type="text" name="gameprompt" class="form-control" id="gameprompt-input" autofocus required>
+						<input type="text" name="gameprompt" class="form-control" id="gameprompt-input" maxlength="6" autofocus required>
 						<div class="join-submit">
 							<button type="submit" name="join-game-submit" class="btn btn-primary">Join Game!</button>
 						</div>

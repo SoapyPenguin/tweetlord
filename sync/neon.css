@@ -170,7 +170,6 @@ header {
 .ph0-codespan {
   position: relative;
   bottom: 4px;
-  padding-left: 2%;
   font-size: 160%;
   margin-top: -10px;
 }
@@ -189,4 +188,8 @@ header {
 .ph0-listitem {
   padding-left: 1%;
   font-size: 160%;
+}
+
+.ph0-timer {
+
 }

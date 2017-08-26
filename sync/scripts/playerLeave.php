@@ -24,7 +24,6 @@ if($slot == 0) {
 }
 $users["p" . $slot] = "none";
 
-//TEST ME
 if($slot != 6 && $users["p" . ($slot+1)] != "none") {
   while($slot < 6) {
 	$users["p" . $slot] = $users["p". ($slot+1)];
@@ -37,7 +36,6 @@ if($hostleft == 1) {
     die("Error in playerLeave event: failed to update host.");
   }
 }
-//END TEST
 
 $newusers = json_encode($users);
 //Update db

@@ -14,7 +14,8 @@ $_SESSION['gamePlayers'] = json_decode($gotinfo['players'], true);
 $_SESSION['gamePoints'] = json_decode($gotinfo['points'], true);
 
 //Return json for updating JS vars
-$jsvars = '{"phase":' . $gotinfo['phase'] . ',"round":' . $gotinfo['round'] . ',"players":' . $gotinfo['players'] . ',"points":' . $gotinfo['points'] . '}';
+$jsvars = '{"phase":' . $gotinfo['phase'] . ',"round":' . $gotinfo['round'] . ',"host":' . $gotinfo['host'] . ',"players":' . 
+  $gotinfo['players'] . ',"points":' . $gotinfo['points'] . '}';
 echo $jsvars;
 die();
 ?>
