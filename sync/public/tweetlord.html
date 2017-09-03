@@ -75,7 +75,7 @@
       <div class="newprompt-view">
         <button class="btn btn-default back-btn">Back</button>
         <h4 class="nameprompt-header" align="center">Choose a name</h4>
-        <form action="/sync/scripts/makeGame.php" method="post" name="name-prompt" id="name-prompt" class="form-horizontal">
+        <form action="/scripts/makeGame" method="post" name="name-prompt" id="name-prompt" class="form-horizontal">
           <input type="hidden" name="makeGameGate" value="verified">
           <input type="text" name="namepromptM" class="form-control" id="nameprompt-input" maxlength="16" placeholder="16 characters max" autofocus required>
           <div class="make-submit">
@@ -129,6 +129,7 @@ $(document).ready(function() {
 		$('.menu-view').fadeOut(function() {
 			$('.options-view').fadeIn();
 		});
+        socket.emit('bclick');
 	});
 
 	$('.back-btn').on('click', function() {
