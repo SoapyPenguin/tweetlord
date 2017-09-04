@@ -93,7 +93,7 @@
 	</body>
 </html>
 <script type="text/javascript">
-var socket = io();
+var socket = io('http://localhost:8081');
 socket.emit('sockettest', {
     welcome: "Socket start!"
 });

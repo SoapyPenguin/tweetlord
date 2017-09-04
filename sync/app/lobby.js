@@ -13,20 +13,26 @@ var pathmode = 1;
 tweetlord.use(express.static(__dirname + '/../public'));
 console.log("Loading...");
 
-//DB
-dbcon = db.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "TiredOctopus40",
-    database: "tweetlord"
-});
-dbcon.connect(function(err) {
-    if(err) {
-        console.log("Error in making db connection");
-    }
-    console.log("Connected to tweetlord db");
-});
+//Gamevars
+var gName = "Deeedle";
+var gCode = generateGC();
+var gPoints = 0;
 
+//DB
+//dbcon = db.createConnection({
+//    host: "localhost",
+//    user: "root",
+//    password: "TiredOctopus40",
+//    database: "tweetlord"
+//});
+//dbcon.connect(function(err) {
+//    if(err) {
+//        console.log("Error in making db connection");
+//    }
+//    console.log("Connected to tweetlord db");
+//});
+
+/*******************************************************************************************************************************/
 //Root page
 tweetlord.get('/', function(req, res) {
   if(pathmode == 0) {
@@ -54,43 +60,43 @@ tweetlord.get('/play/:gameCode', function(req, res) {
     }
   }
   var gc = req.params.gameCode;
+  //Sockets
+  var SOCKETLIST = {};
+  var io = require('socket.io')(serv);
+  io.sockets.on('connection', function(socket) {
+    var slen = Object.keys(SOCKETLIST).length;
+    socket.tlid = slen + 1;
+    socket.name = gName;
+    socket.points = 0;
+    SOCKETLIST[socket.tlid] = socket;
+    console.log("Socket connection initialized: socket " + socket.tlid);
+    
+    socket.on('sockettest', function(data) {
+      console.log(data.welcome);
+    });
+    
+    socket.on('disconnect', function() {
+      delete SOCKETLIST[socket.tlid];
+    });
+    
+  });
 });
 
+/*******************************************************************************************************************************/
 //Lobby forms
 tweetlord.post('/scripts/makeGame', function(req, res) {
-    var name = req.body.namepromptM;
-    var mdate = new Date().toISOString().slice(0, 19).replace('T', ' ');
-    var makePlayer = "INSERT INTO users (username, game, make_date) VALUES ('" + name + "', '" + generateGC() + "', '" + mdate + "')";
-    dbcon.query(makePlayer, function(err, result) {
-        if(err) {
-            console.log("Error while making player db entry");
-        }
-        console.log("Player " + name + " created");
-    });
+    gName = req.body.namepromptM;
+    res.writeHead(301, { Location: '/play/' + gCode });
+    res.end();
 });
 
-var SOCKETLIST = {};
-var io = require('socket.io')(serv);
-io.sockets.on('connection', function(socket) {
-  console.log("Socket connection initialized.");
-  socket.id = Math.floor(Math.random() * 100);
-  for(var s in SOCKETLIST) {
-      if(!SOCKETLIST.hasOwnProperty(s)) {
-          continue;
-      }
-      //In progress
-  }
-    
-  socket.on('sockettest', function(data) {
-      console.log(data.welcome);
-  });
-    
-  socket.on('disconnect', function() {
-      //To do
-  });
-    
+tweetlord.post('/scripts/joinGame', function(req, res) {
+    gName = req.body.namepromptJ;
+    gCode = req.body.gameprompt;
 });
 
+/*******************************************************************************************************************************/
+//Listen
 serv.listen(8081, function() {
   console.log("WELCOME TO TWEETLORRRRD!");
   console.log();
@@ -101,8 +107,19 @@ function generateGC() {
     var gcchars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
     var gc = "";
     for(var i = 0; i < 6; i++) {
-        var rc = gcchars.charAt(Math.floor(Math.random() * 37));
+        var rc = gcchars.charAt(Math.floor(Math.random() * 36));
         gc = gc + rc;
     }
     return gc;
+}
+
+function isEmpty(obj) {
+    if (obj == null) return true;
+    if (obj.length > 0)    return false;
+    if (obj.length === 0)  return true;
+    if (typeof obj !== "object") return true;
+    for (var key in obj) {
+        if (hasOwnProperty.call(obj, key)) return false;
+    }
+    return true;
 }
