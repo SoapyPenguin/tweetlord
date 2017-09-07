@@ -73,28 +73,143 @@
   		<div class="game-content">
 			<div class="ph0-content row">
 				<h3 class="ph0-header">Waiting for players to join...</h3>
-				<div class="ph0-timer"><span class="label label-primary ph0-tick" align="center" style="font-size:300%;"></span></div>
-        <div class="ph0-pl-area col-xs-8">
-  				<ul class="ph0-playerlist">
-  					<li class="ph0-p1"><span class="ph0-listitem"></span></li>
-  					<li class="ph0-p2"><span class="ph0-listitem"></span></li>
-  					<li class="ph0-p3"><span class="ph0-listitem"></span></li>
-  					<li class="ph0-p4"><span class="ph0-listitem"></span></li>
-  					<li class="ph0-p5"><span class="ph0-listitem"></span></li>
-  					<li class="ph0-p6"><span class="ph0-listitem"></span></li>
-  				</ul>
+                <div class="ph0-pl-area col-xs-8">
+  				  <ul class="ph0-playerlist">
+  					 <li class="ph0-p1"><span class="ph0-listitem1"></span></li>
+  					 <li class="ph0-p2"><span class="ph0-listitem2"></span></li>
+  					 <li class="ph0-p3"><span class="ph0-listitem3"></span></li>
+  					 <li class="ph0-p4"><span class="ph0-listitem4"></span></li>
+  					 <li class="ph0-p5"><span class="ph0-listitem5"></span></li>
+  					 <li class="ph0-p6"><span class="ph0-listitem6"></span></li>
+  				  </ul>
+                </div>
+                <div class="ph0-gc col-xs-4">
+                    <div class="ph0-gc-label">
+                        GAME CODE: <br>
+                    </div>
+                    <span class="ph0-codespan label label-primary" style="font-size:1.2em;"></span>
+                    <div class="ph0-tick-label">
+                        START IN: <br>
+                    </div>
+                    <span class="ph0-tick label label-info" style="font-size:1.2em;"></span>
+                    <button class="btn btn-warning btn-sm postpone-btn">Postpone</button>
+                    <button class="btn btn-success btn-sm impatient-btn">I'm Impatient</button>
+                </div>
+			</div>
+            <div class="transition-content row">
+                <h3 class="transition-logo"><span class="transition-w1">Tweet</span><span class="transition-w2">lord</span></h3>
+            </div>
+            <div class="ph1-content row">
+                <h3 class="ph1-tweeter-header col-xs-12">Tweeting as:</h3>
+                <div class="ph1-tweeter"></div>
+                <h3 class="ph1-prompt-header col-xs-12"></h3>
+                <div class="ph1-prompt"></div>
+                <div class="ph1-tweetarea">
+                    <textarea rows="4" class="form-control ph1-tweetinput" maxlength="140" placeholder="Compose your tweet"></textarea>
+                </div>
+                <button class="btn btn-primary compose-tweet-btn">Enter</button>
+                <span class="ph1-tick label label-info" style="font-size:1.2em;"></span>
+            </div>
+            <div class="ph1-postcontent row">
+                <h3 class="transition-logo"><span class="transition-w1">Tweet</span><span class="transition-w2">lord</span></h3>
+                <h2 class="ph1-pc-header">Waiting for other players...</h2>
+                <span class="ph1-tick label label-info" style="font-size:1.2em;"></span>
+            </div>
         </div>
-        <div class="ph0-gc col-xs-3">GAME CODE: <br><span class="ph0-codespan"></span></div>
-			</div>
-      </div>
-			<div class="ph1-content">
-			</div>
     </div>
 	</body>
 </html>
 <script type="text/javascript">
-var socket = io('http://localhost:8081');
-socket.emit('sockettest', {
-    welcome: "Socket start!"
+$(document).ready(function() {
+    //Setup
+    var localip = 'ws://localhost:8081/';
+    var gameState = {};
+    var playerSlot = 0;
+    
+    var socket = io(localip);
+    socket.emit('sockettest', {
+        welcome: "Socket start!"
+    });
+
+    socket.on('setup', function(data) {
+        console.log("Setting up...");
+        gameState = data.gameState;
+        playerSlot = data.slot;
+        $('.ph0-codespan').text(gameState.code);
+        for(var i = 1; i < 7; i++) {
+            $('.ph0-listitem' + i).text(data.gameState.players[i]);
+        }
+    });
+    
+    socket.on('playerJoin', function(data) {
+        console.log(data.name + " has joined as P" + data.slot);
+        for(var i = 1; i < 7; i++) {
+            $('.ph0-listitem' + i).text(data.gameState.players[i]);
+        }
+    });
+    
+    //Update gameState
+    function updateGame(gs) {
+        gameState = gs;
+    }
+    
+    //Ticks
+    socket.on('phaseZeroTick', function(data) {
+        updateGame(data.gameState);
+        $('.ph0-tick').text(data.gameState.timers[0]);
+    });
+    
+    socket.on('phaseOneTick', function(data) {
+        updateGame(data.gameState);
+        $('.ph1-tick').text(data.gameState.timers[1]);
+    });
+    
+    //Transitions
+    socket.on('startPhaseOne', function(data) {
+        $('.ph0-content').fadeOut(function() {
+            $('.transition-content').fadeIn();
+            $('.ph1-tweeter').text(data.gameState.tweeters[playerSlot].name);
+            $('.ph1-prompt').text(data.gameState.prompts[playerSlot]);
+            setTimeout(function() {
+                $('.transition-content').fadeOut(function() {
+                    $('.ph1-content').fadeIn();
+                });
+            }, 3000);
+        });
+    });
+    
+    //Alerts
+    socket.on('tooManyPostpones', function() {
+        alert("Whoa there, cowboy. Let's get this show on the road.");
+    });
+    
+    //Buttons/inputs
+    $('.postpone-btn').on('click', function() {
+        socket.emit('postpone');
+    });
+    
+    $('.impatient-btn').on('click', function() {
+        socket.emit('impatience');
+    });
+    
+    $('.ph1-tweetinput').on('keyup', function(e) {
+        if((e.keyCode || e.which) == 13) {
+            socket.emit('composeTweet', {
+                slot: playerSlot
+            });
+            $('.ph1-content').fadeOut(function() {
+                $('.ph1-postcontent').fadeIn();
+            });
+        }
+    });
+    
+    $('.compose-tweet-btn').on('click', function() {
+        socket.emit('composeTweet', {
+            slot: playerSlot
+        });
+        $('.ph1-content').fadeOut(function() {
+            $('.ph1-postcontent').fadeIn();
+        });
+    });
 });
 </script>

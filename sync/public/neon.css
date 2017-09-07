@@ -143,6 +143,13 @@ header {
   margin-left: 2%;
 }
 
+.transition-content {
+  display: hidden;
+  position: relative;
+  background: linear-gradient(to right, #666666, #808080, #666666);
+  height: 50%;
+}
+
 .ph0-content {
   position: relative;
   background: linear-gradient(to right, #666666, #808080, #666666);
@@ -156,19 +163,34 @@ header {
   color: white;
 }
 
+.ph0-gc-label {
+    margin-bottom: 0.2em;
+}
+
+.ph0-tick-label {
+    margin-top: 2.5em;
+    margin-bottom: 0.2em;
+}
+
+.ph0-tick {
+    margin-left: 1em;
+}
+
 .ph0-gc {
   width: 90%;
-  font-size: 150%;
-  background: linear-gradient(#007399, #0086b3, #007399);
+  margin-bottom: 10px;
+  font-size: 100%;
   color: white;
+/*
   border: 2px solid #004d66;
   border-radius: 5px;
+  background: linear-gradient(#007399, #0086b3, #007399);
+*/
 }
 
 .ph0-codespan {
-  font-size: 160%;
-  margin-top: -10px;
-  margin-left: 5%;
+  font-size: 1.2em;
+  margin-left: 0;
 }
 
 .ph0-playerlist {
@@ -180,11 +202,19 @@ header {
   padding-bottom: 3%;
   border: 3px solid #007399;
   border-radius: 16px;
-  background: linear-gradient(#4dd2ff, #80dfff, #4dd2ff)
+  background: linear-gradient(#4dd2ff, #80dfff, #4dd2ff);
+}
+
+.ph0-playerlist li {
+    padding-bottom: 3%;
+    margin-left: 1.5%;
+    font-family: "Erica One";
+    font-size: 120%;
 }
 
 .ph0-listitem {
   padding-left: 1%;
+  padding-bottom: 5%;
   font-size: 160%;
 }
 
@@ -202,8 +232,18 @@ header {
 .ph0-tick {
   padding: 0em 0.25em 0.2em 0.25em;
   margin-bottom: 0.1em;
-  margin-left: -0.3em;
   font-size: 300%;
   color: white;
   border: 2px solid #003333;
+}
+
+.postpone-btn, .impatient-btn {
+    margin-top: 1.2em;
+}
+
+.transition-content, .ph1-content, .ph1-postcontent {
+  display: none;
+  position: relative;
+  background: linear-gradient(to right, #666666, #808080, #666666);
+  height: 50%;
 }
